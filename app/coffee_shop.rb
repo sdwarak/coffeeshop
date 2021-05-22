@@ -27,7 +27,7 @@ class CoffeeShop
     def menu
         puts ("\nMenu:\n")
         @items.each_with_index do |item, idx|
-            puts "#{idx}: #{item.display}"
+            puts "#{idx+1}: #{item.display}"
         end
         puts ("\n\n")
     end

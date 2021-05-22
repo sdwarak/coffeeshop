@@ -31,15 +31,15 @@ module Helper
 
     def self.select_and_pay(coffee_shop,orders)
         payment_processor = PaymentProcessor.new
+        value_map = {}
+        count = 1
+        coffee_shop.items.each do |cs_item|
+            value_map[count] = create_selected_item(cs_item)
+            count += 1
+        end
         for item_number in orders
-            count = 0
-            coffee_shop.items.each do |cs_item|
-                count += 1
-                if count == item_number.to_i
-                    item = create_selected_item(cs_item)
-                    payment_processor.purchase(item)
-                end
-            end
+            payment_processor.purchase(value_map[item_number.to_i])
+            puts "#{value_map[item_number.to_i].name} is selected."
         end
         payment_processor
     end
@@ -49,7 +49,6 @@ module Helper
     end
 
     def self.create_selected_item(item)
-        puts "#{item.name} is selected."
         Item.new({"name" => item.name,
                   "category" => item.category,
                   "price" => item.price})
