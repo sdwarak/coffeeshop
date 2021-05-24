@@ -7,7 +7,7 @@ module Discount
     class OrderOver21
 
         def self.calculate(ordered_items)
-            Discount.set_category_discount(ordered_items,'Beverage',1) if Discount.total_before_taxes(ordered_items)>21
+            Discount.set_beverage_discount(ordered_items, 1) if Discount.total_before_taxes(ordered_items)>21
             ordered_items
         end
 
@@ -16,7 +16,7 @@ module Discount
     class Sandwich
 
         def self.calculate(ordered_items)
-            Discount.set_category_discount(ordered_items,'Beverage',0.25) if Discount.category_discount?(ordered_items,'Sandwich')
+            Discount.set_beverage_discount(ordered_items, 0.25) if Discount.category_discount?(ordered_items,'Sandwich')
             ordered_items
         end
 
@@ -30,6 +30,22 @@ module Discount
         end
 
     end
+
+    def self.method_missing(m, *args, &block)
+        category = m.to_s
+        if category.include?('set') && category.include?('discount')
+            ordered_items = args[0]
+            discount = args[1]
+            ['set', 'discount', '_'].inject(category) {|category,v| category.gsub!(v, '') }
+            ordered_items.items.each do |oi|
+                if  oi.send("#{category}?")
+                    oi.price=((oi.price()*(1-discount))).round(2)
+                    break
+                end
+            end
+        end
+    end
+
     
     def self.total_before_taxes ordered_items
         total_before_tax = 0
