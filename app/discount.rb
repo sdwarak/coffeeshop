@@ -16,7 +16,7 @@ module Discount
     class Sandwich
 
         def self.calculate(ordered_items)
-            Discount.set_beverage_discount(ordered_items, 0.25) if Discount.category_discount?(ordered_items,'Sandwich')
+            Discount.set_beverage_discount(ordered_items, 0.25) if Discount.sandwich?(ordered_items)
             ordered_items
         end
 
@@ -25,7 +25,7 @@ module Discount
     class CoffeePowder
 
         def self.calculate(ordered_items)
-            Discount.catergory_discount_on_day(ordered_items,'Coffee Powder',0.05, DAYS_OF_THE_WEEK[3]);
+            Discount.category_discount_on_day(ordered_items,'Coffee Powder',0.05, DAYS_OF_THE_WEEK[3]);
             ordered_items
         end
 
@@ -43,6 +43,16 @@ module Discount
                     break
                 end
             end
+        elsif category.include?('?')
+            flag = false
+            ordered_items = args[0]
+            ordered_items.items.each do |oi|
+                if oi.send("#{category}")
+                    flag = true
+                    break
+                end
+            end
+            flag
         end
     end
 
@@ -61,7 +71,7 @@ module Discount
                 break
             end
         end
-        return flag
+        flag
     end
 
     def self.set_category_discount ordered_items, category, discount
@@ -73,7 +83,7 @@ module Discount
         end      
     end
 
-    def self.catergory_discount_on_day ordered_items, category, discount, day 
+    def self.category_discount_on_day ordered_items, category, discount, day 
         if DAYS_OF_THE_WEEK.index(day) == Time.now.wday
             ordered_items.items.each do |oi|
                 oi.price=((oi.price*(1-discount))).round(2) if oi.category? category
