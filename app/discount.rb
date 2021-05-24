@@ -1,5 +1,4 @@
 require 'time'
-require 'byebug'
 
 module Discount
 
@@ -26,7 +25,7 @@ module Discount
     class CoffeePowder
 
         def self.calculate(ordered_items)
-            Discount.tuesday_discount_on_coffee_powder(ordered_items,0.05)
+            Discount.coffee_powder_on_tuesday(ordered_items,0.05)
             ordered_items
         end
 
@@ -54,12 +53,12 @@ module Discount
                 end
             end
             flag
-        elsif category.include?('_discount_on_')
-            arr = category.gsub!('_discount_on_','-').split('-')
+        elsif category.include?('_on_')
+            arr = category.gsub!('_on_','-').split('-')
             ordered_items = args[0]
             discount = args[1]
-            category = arr[1]
-            day = arr[0].capitalize
+            category = arr[0]
+            day = arr[1].capitalize
             if DAYS_OF_THE_WEEK.index(day) == Time.now.wday
                 ordered_items.items.each do |oi|
                     oi.price=((oi.price*(1-discount))).round(2) if oi.send("#{category}?")
