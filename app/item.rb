@@ -35,4 +35,10 @@ class Item
         oi.category == category
     end
 
+    def to_h
+        {"name" => @name,
+        "category" => @category,
+        "price" => @price}
+    end
+
 end

@@ -3,6 +3,7 @@ require('./app/item')
 require('./app/coffee_shop')
 require('./app/offer')
 require('./app/payment_processor')
+require('byebug')
 
 module Helper
 
@@ -34,11 +35,12 @@ module Helper
         value_map = {}
         count = 1
         coffee_shop.items.each do |cs_item|
-            value_map[count] = create_selected_item(cs_item)
+            value_map[count] = cs_item
             count += 1
         end
         for item_number in orders
-            payment_processor.purchase(value_map[item_number.to_i])
+            item = Item.new(value_map[item_number.to_i].to_h)
+            payment_processor.purchase(item)
             puts "#{value_map[item_number.to_i].name} is selected."
         end
         payment_processor
@@ -46,12 +48,6 @@ module Helper
 
     def self.generate_receipt(processed_payment)
         processed_payment.generate_receipt
-    end
-
-    def self.create_selected_item(item)
-        Item.new({"name" => item.name,
-                  "category" => item.category,
-                  "price" => item.price})
     end
 
 end
