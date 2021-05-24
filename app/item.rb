@@ -11,13 +11,12 @@ class Item
     end
 
     def tax
-        if beverage?
-            0.15
-        elsif sandwich?
-            0.10
-        else
-            0.12
-        end
+        tax_hash[@category] ? tax_hash[@category] : 0.12
+    end
+
+    def tax_hash
+        { "Beverage" => 0.15,
+          "Sandwich" => 0.10 }
     end
     
     def display
