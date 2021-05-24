@@ -1,3 +1,5 @@
+    require 'byebug'
+
 class Item
 
     attr_accessor :name
@@ -36,9 +38,9 @@ class Item
     end
 
     def to_h
-        {"name" => @name,
-        "category" => @category,
-        "price" => @price}
+        hash = {}
+        instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
+        hash
     end
 
 end
