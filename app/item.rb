@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Item
 
     attr_accessor :name
@@ -8,6 +10,10 @@ class Item
         @name = item["name"]
         @category = item["category"]
         @price = item["price"]
+    end
+
+    def method_missing(m, *args, &block)
+        "#{@category.downcase.gsub(' ', '_')}?" == m.to_s if m.to_s.include?('?')
     end
 
     def tax
@@ -23,16 +29,8 @@ class Item
         "#{@name}, #{@category} for $ #{@price}"
     end
 
-    def beverage?
-        @category == "Beverage"
-    end
-
-    def sandwich?
-        @category == "Sandwich"
-    end
-
     def category? category
-        oi.category == category
+        @category == category
     end
 
     def to_h
