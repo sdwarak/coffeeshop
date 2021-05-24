@@ -40,7 +40,7 @@ module Discount
     def self.category_discount? ordered_items, category
         flag = false
         ordered_items.items.each do |oi|
-            if oi.category == category
+            if oi.category? category
                 flag = true
                 break
             end
@@ -50,7 +50,7 @@ module Discount
 
     def self.set_category_discount ordered_items, category, discount
         ordered_items.items.each do |oi|
-            if  oi.category() == category
+            if  oi.category? category
                 oi.price=((oi.price()*(1-discount))).round(2)
                 break
             end
