@@ -36,9 +36,7 @@ class Item
     end
 
     def to_h
-        hash = {}
-        instance_variables.each { |var| hash[var.to_s.delete('@')] = instance_variable_get(var) }
-        hash
+        instance_variables.map{ |v| Hash[v.to_s.delete("@"), instance_variable_get(v)] }.inject(:merge)
     end
 
 end
