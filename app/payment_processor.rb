@@ -31,7 +31,7 @@ class PaymentProcessor
     def calculate
         offer_applied_items = Offer.apply @ordered_items
         for oAI in offer_applied_items.items
-            @total += (oAI.price*(1+oAI.tax)).round(2)
+            @total += (oAI.price*(oAI.tax + 1)).round(2)
         end
         return @total.round(2)
     end
