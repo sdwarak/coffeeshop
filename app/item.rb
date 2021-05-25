@@ -12,7 +12,7 @@ class Item
         @price = item["price"]
     end
 
-    def method_missing(m, *args, &block)
+    def method_missing(m, *_args)
         "#{@category.downcase.gsub(' ', '_')}?" == m.to_s if m.to_s.include?('?')
     end
 
