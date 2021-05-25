@@ -2,8 +2,6 @@ require 'time'
 
 module Discount
 
-    DAYS_OF_THE_WEEK = [ 'Sunday', 'Monday','Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].freeze
-
     class OrderOver21
 
         def self.calculate(ordered_items)
@@ -25,7 +23,7 @@ module Discount
     class CoffeePowder
 
         def self.calculate(ordered_items)
-            Discount.catergory_discount_on_day(ordered_items,'Coffee Powder',0.05, DAYS_OF_THE_WEEK[3]);
+            Discount.catergory_discount_on_day(ordered_items,'Coffee Powder',0.05, 'Tuesday')
             ordered_items
         end
 
@@ -58,7 +56,7 @@ module Discount
     end
 
     def self.catergory_discount_on_day ordered_items, category, discount, day 
-        if DAYS_OF_THE_WEEK.index(day) == Time.now.wday
+        if Time.now.send("#{day.downcase}?")
             ordered_items.items.each do |oi|
                 oi.price=((oi.price*(1-discount))).round(2) if oi.category? category
             end
