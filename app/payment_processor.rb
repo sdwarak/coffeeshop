@@ -5,6 +5,7 @@ class PaymentProcessor
 
     def initialize
         @ordered_items = OrderedItem.new
+        @total = 0
     end
 
     def reset_ordered_items
@@ -13,7 +14,6 @@ class PaymentProcessor
 
     def purchase item
         @ordered_items.add item
-        @total = 0
     end
     
     def cancel_ordered_item item
