@@ -20,10 +20,10 @@ module Discount
 
     end
   
-    class CoffeePowder
+    class CoffeePowderWednesday
 
         def self.calculate(ordered_items)
-            Discount.catergory_discount_on_day(ordered_items,'Coffee Powder',0.05, 'Tuesday')
+            Discount.catergory_discount_on_day(ordered_items,'CoffeePowder',0.05, 'Wednesday')
             ordered_items
         end
 
@@ -38,7 +38,7 @@ module Discount
     def self.category_discount? ordered_items, category
         flag = false
         ordered_items.items.each do |oi|
-            if oi.category? category
+            if oi.class.to_s  == category
                 flag = true
                 break
             end
@@ -48,7 +48,7 @@ module Discount
 
     def self.set_category_discount ordered_items, category, discount
         ordered_items.items.each do |oi|
-            if  oi.category? category
+            if  oi.class.to_s  == category
                 oi.price=((oi.price()*(1-discount))).round(2)
                 break
             end
@@ -58,7 +58,7 @@ module Discount
     def self.catergory_discount_on_day ordered_items, category, discount, day 
         if Time.now.send("#{day.downcase}?")
             ordered_items.items.each do |oi|
-                oi.price=((oi.price*(1-discount))).round(2) if oi.category? category
+                oi.price=((oi.price*(1-discount))).round(2) if oi.class.to_s  == category
             end
         end
         ordered_items

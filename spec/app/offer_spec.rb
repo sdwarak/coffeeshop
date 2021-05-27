@@ -2,25 +2,21 @@ require 'spec_helper'
 require './app/item'
 require './app/offer'
 require './app/ordered_item'
+Dir['./app/items/*.rb'].each { |file| require file }
 
 describe Offer do
 
     before do 
-        @items_1 = [Item.new({"name" => "Hoagie",
-                                "price" => 12.25,
-                                "category" => "Sandwich"}),
-                    Item.new({"name" => "Americano",
-                                "price" => 1.25,
-                                "category" => "Beverage"})]
-        @items_2 = [Item.new({"name"=> "Sourdough",
-                                "price"=> 18.00,
-                                "category"=> "Sandwich"}),
-                    Item.new({"name"=> "Americano",
-                                "price"=> 3.25,
-                                "category"=> "Beverage"}),
-                    Item.new( {"name"=> "Cuban",
-                                "price"=> 1.75,
-                                "category"=> "Beverage"})]
+        @items_1 = [Sandwich.new({"name" => "Hoagie",
+                                "price" => 12.25,}),
+                    Beverage.new({"name" => "Americano",
+                                "price" => 1.25})]
+        @items_2 = [Sandwich.new({"name"=> "Sourdough",
+                                "price"=> 18.00}),
+                    Beverage.new({"name"=> "Americano",
+                                "price"=> 3.25}),
+                    Beverage.new( {"name"=> "Cuban",
+                                "price"=> 1.75})]
     end
 
     it "should apply discount" do
@@ -29,7 +25,7 @@ describe Offer do
         ordered_item = Offer.apply(ordered_item)
         discounted_item = nil
         ordered_item.items.each do |oi|
-            if oi.beverage?
+            if oi.class.to_s == "Beverage"
                 discounted_item = oi
                 break
             end
@@ -43,7 +39,7 @@ describe Offer do
         ordered_item = Offer.apply(ordered_item)
         free_item = nil
         ordered_item.items.each do |oi|
-            if oi.beverage?
+            if oi.class.to_s == "Beverage"
                 free_item = oi;
                 break
             end

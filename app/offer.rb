@@ -6,7 +6,7 @@ class Offer
     RULES = [
         Discount::OrderOver21,
         Discount::Sandwich,
-        Discount::CoffeePowder
+        Discount::CoffeePowderWednesday
     ].freeze
 
     def self.display

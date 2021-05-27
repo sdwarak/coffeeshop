@@ -1,3 +1,16 @@
+class IncompletePayment < StandardError
+    attr_reader :error
+    attr_reader :amount
+    attr_reader :difference
+
+
+    def initialize(error, amount, difference)
+      @error = error
+      @amount = amount
+      @difference = difference
+    end
+end
+
 class PaymentProcessor
 
     require_relative 'ordered_item'
@@ -28,6 +41,11 @@ class PaymentProcessor
         @ordered_items
     end
 
+    def total_message
+        @total = self.calculate
+        puts "\nYour total with taxes is #{@total}\n"
+    end
+
     def calculate
         offer_applied_items = Offer.apply @ordered_items
         for oAI in offer_applied_items.items
@@ -36,10 +54,22 @@ class PaymentProcessor
         return @total.round(2)
     end
 
+    def pay(amount)
+        difference = (@total-amount).round(2)
+        if amount < @total
+            raise IncompletePayment.new("Incomplete Payment",
+                                         amount, difference),
+                                        "Kindly pay the difference of $ #{difference}."
+        else
+            @amount = amount
+            puts "Amount paid"
+        end
+    end
+
     def generate_receipt
-        total = self.calculate
-        puts "\nYour total with taxes is #{total}\n"
         puts "\n\n*** Receipt ***"
+        puts "\nAmount paid is #{@amount}"
+        puts "\nTip is #{(@amount-@total).round(2)}\n"
         self.show_ordered_items
         self.reset_ordered_items
     end

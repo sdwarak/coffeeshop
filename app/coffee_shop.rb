@@ -8,7 +8,7 @@ class CoffeeShop
                  elsif (items)
                     [items]
                  else
-                    []    
+                    []
                  end
     end
 

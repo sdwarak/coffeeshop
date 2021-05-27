@@ -6,9 +6,8 @@ require './app/ordered_item'
 describe PaymentProcessor do 
 
     before do
-        @item = Item.new({"name"=> "Sourdough",
-                            "price"=> 18.00,
-                            "category"=> "Sandwich"})
+        @item = Sandwich.new({"name"=> "Sourdough",
+                            "price"=> 18.00})
         @items_hash = [{"name"=> "Sourdough",
                         "price"=> 18.00,
                         "category"=> "Sandwich"},
@@ -30,11 +29,11 @@ describe PaymentProcessor do
 
     it 'should be possible to calculate the score' do
         items = []
-        @items_hash.each {|ih| items.push Item.new(ih)}  
+        @items_hash.each {|ih| items.push Object.const_get(ih["category"]).new(ih)}  
         payment_processor = PaymentProcessor.new
         items.each {|i| payment_processor.purchase(i) }
                                                                
-        expect(payment_processor.calculate).to be(22.89);
+        expect(payment_processor.calculate).to be(22.89)
     end
 
 end

@@ -1,6 +1,7 @@
-require 'byebug'
+require_relative('tax')
 
 class Item
+    include Tax
 
     attr_accessor :name
     attr_accessor :price
@@ -8,29 +9,15 @@ class Item
 
     def initialize item
         @name = item["name"]
-        @category = item["category"]
         @price = item["price"]
     end
 
-    def method_missing(m, *_args)
-        "#{@category.downcase.gsub(' ', '_')}?" == m.to_s if m.to_s.include?('?')
-    end
-
     def tax
-        tax_hash[@category] ? tax_hash[@category] : 0.12
-    end
-
-    def tax_hash
-        { "Beverage" => 0.15,
-          "Sandwich" => 0.10 }
+        Tax.calculate(self)
     end
     
     def display
-        "#{@name}, #{@category} for $ #{@price}"
-    end
-
-    def category? category
-        @category == category
+        "#{@name}, #{self.class.to_s} for $ #{@price}"
     end
 
     def to_h
